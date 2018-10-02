@@ -13,7 +13,7 @@ enum ActiveElement {
     case hashtag(String)
     case url(original: String, trimmed: String)
 	case email(String)
-//	case phone(String)
+	case phone(String)
     case custom(String)
 
     static func create(with activeType: ActiveType, text: String) -> ActiveElement {
@@ -22,7 +22,7 @@ enum ActiveElement {
         case .hashtag: return hashtag(text)
         case .url: return url(original: text, trimmed: text)
 		case .email: return email(text)
-//		case .phone: return phone(text)
+		case .phone: return phone(text)
         case .custom: return custom(text)
         }
     }
@@ -33,7 +33,7 @@ public enum ActiveType {
     case hashtag
     case url
 	case email
-//	case phone
+	case phone
     case custom(pattern: String)
 
     var pattern: String {
@@ -42,7 +42,7 @@ public enum ActiveType {
         case .hashtag: return RegexParser.hashtagPattern
         case .url: return RegexParser.urlPattern
 		case .email: return RegexParser.emailPattern
-//		case .phone: return ""
+		case .phone: return ""
         case .custom(let regex): return regex
         }
     }
@@ -55,7 +55,7 @@ extension ActiveType: Hashable, Equatable {
         case .hashtag: return -2
         case .url: return -3
 		case .email: return -4
-//		case .phone: return -5
+		case .phone: return -5
         case .custom(let regex): return regex.hashValue
         }
     }
@@ -67,7 +67,7 @@ public func ==(lhs: ActiveType, rhs: ActiveType) -> Bool {
     case (.hashtag, .hashtag): return true
     case (.url, .url): return true
 	case (.email, .email): return true
-//	case (.phone, .phone): return true
+	case (.phone, .phone): return true
     case (.custom(let pattern1), .custom(let pattern2)): return pattern1 == pattern2
     default: return false
     }

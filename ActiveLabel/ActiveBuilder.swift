@@ -20,6 +20,8 @@ struct ActiveBuilder {
             return createElements(from: text, for: type, range: range, filterPredicate: filterPredicate)
 		case .email:
 			return createElements(from: text, for: type, range: range, filterPredicate: filterPredicate)
+		case .phone:
+			return createElements(from: text, for: type, range: range, filterPredicate: filterPredicate)
         case .custom:
             return createElements(from: text, for: type, range: range, minLength: 1, filterPredicate: filterPredicate)
         }
@@ -58,7 +60,9 @@ struct ActiveBuilder {
                                                 range: NSRange,
                                                 minLength: Int = 2,
                                                 filterPredicate: ActiveFilterPredicate?) -> [ElementTuple] {
-
+		guard type != .phone else {
+			return phoneElements(from: text, range: range, minLength: minLength, filterPredicate: filterPredicate)
+		}
         let matches = RegexParser.getElements(from: text, with: type.pattern, range: range)
         let nsstring = text as NSString
         var elements: [ElementTuple] = []
@@ -73,6 +77,25 @@ struct ActiveBuilder {
         }
         return elements
     }
+	
+	private static func phoneElements(from text: String, range: NSRange, minLength: Int = 2, filterPredicate: ActiveFilterPredicate?) -> [ElementTuple] {
+		let type: NSTextCheckingResult.CheckingType = [.phoneNumber]
+		guard let phoneDetector = try? NSDataDetector(types: type.rawValue) else { return [] }
+		var elements = [ElementTuple]()
+		phoneDetector.enumerateMatches(in: text, options: [], range: range) { (result, _, _) in
+			if
+				let result = result,
+				let phoneNumber = result.phoneNumber,
+				phoneNumber.count > minLength {
+				let word = (text as NSString).substring(with: result.range).trimmingCharacters(in: .whitespacesAndNewlines)
+				if filterPredicate?(word) ?? true {
+					let element = ActiveElement.create(with: .phone, text: word)
+					elements.append((result.range, element, .phone))
+				}
+			}
+		}
+		return elements
+	}
 
     private static func createElementsIgnoringFirstCharacter(from text: String,
                                                                   for type: ActiveType,
