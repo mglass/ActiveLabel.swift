@@ -352,7 +352,9 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
 			case .phone: attributes[NSAttributedStringKey.foregroundColor] = phoneColor
             case .custom: attributes[NSAttributedString.Key.foregroundColor] = customColor[type] ?? defaultCustomColor
             }
-            
+			
+			attributes[NSAttributedString.Key.underlineStyle] = NSUnderlineStyle.single.rawValue
+			
             if let highlightFont = hightlightFont {
                 attributes[NSAttributedString.Key.font] = highlightFont
             }
