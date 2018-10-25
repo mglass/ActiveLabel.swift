@@ -305,8 +305,7 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
         
         if parseText {
             clearActiveElements()
-            let newString = parseTextAndExtractActiveElements(mutAttrString)
-            mutAttrString.mutableString.setString(newString)
+			parseTextAndExtractActiveElementsInPlace(&mutAttrString)
         }
         
         addLinkAttribute(mutAttrString)
@@ -370,15 +369,16 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
     }
     
     /// use regex check all link ranges
-    fileprivate func parseTextAndExtractActiveElements(_ attrString: NSAttributedString) -> String {
-        var textString = attrString.string
-        var textLength = textString.utf16.count
+	
+	fileprivate func parseTextAndExtractActiveElementsInPlace(_ attrString: inout NSMutableAttributedString) {
+		let textString = attrString.string
+var textLength = textString.utf16.count
         var textRange = NSRange(location: 0, length: textLength)
         
         if enabledTypes.contains(.url) {
             let tuple = ActiveBuilder.createURLElements(from: textString, range: textRange, maximumLength: urlMaximumLength)
             let urlElements = tuple.0
-            let finalText = tuple.1
+let finalText = tuple.1
             textString = finalText
             textLength = textString.utf16.count
             textRange = NSRange(location: 0, length: textLength)
