@@ -331,7 +331,10 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
     fileprivate func addLinkAttribute(_ mutAttrString: NSMutableAttributedString) {
         var range = NSRange(location: 0, length: 0)
         var attributes = mutAttrString.attributes(at: 0, effectiveRange: &range)
-        
+		
+		attributes[NSAttributedString.Key.link] = nil
+		mutAttrString.removeAttribute(NSAttributedString.Key.link, range: range)
+		
         attributes[NSAttributedString.Key.font] = font!
         attributes[NSAttributedString.Key.foregroundColor] = textColor
         mutAttrString.addAttributes(attributes, range: range)
