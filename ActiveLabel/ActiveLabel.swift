@@ -307,7 +307,7 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
             return
         }
         
-        let mutAttrString = addLineBreak(attributedText)
+		var mutAttrString = addLineBreak(attributedText)
         
         if parseText {
             clearActiveElements()
@@ -356,8 +356,8 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
             case .mention: attributes[NSAttributedString.Key.foregroundColor] = mentionColor
             case .hashtag: attributes[NSAttributedString.Key.foregroundColor] = hashtagColor
             case .url: attributes[NSAttributedString.Key.foregroundColor] = URLColor
-			case .email: attributes[NSAttributedStringKey.foregroundColor] = emailColor
-			case .phone: attributes[NSAttributedStringKey.foregroundColor] = phoneColor
+			case .email: attributes[NSAttributedString.Key.foregroundColor] = emailColor
+			case .phone: attributes[NSAttributedString.Key.foregroundColor] = phoneColor
             case .custom: attributes[NSAttributedString.Key.foregroundColor] = customColor[type] ?? defaultCustomColor
             }
 			
@@ -380,14 +380,14 @@ typealias ElementTuple = (range: NSRange, element: ActiveElement, type: ActiveTy
     /// use regex check all link ranges
 	
 	fileprivate func parseTextAndExtractActiveElementsInPlace(_ attrString: inout NSMutableAttributedString) {
-		let textString = attrString.string
-var textLength = textString.utf16.count
+		var textString = attrString.string
+		var textLength = textString.utf16.count
         var textRange = NSRange(location: 0, length: textLength)
         
         if enabledTypes.contains(.url) {
             let tuple = ActiveBuilder.createURLElements(from: textString, range: textRange, maximumLength: urlMaximumLength)
             let urlElements = tuple.0
-let finalText = tuple.1
+			let finalText = tuple.1
             textString = finalText
             textLength = textString.utf16.count
             textRange = NSRange(location: 0, length: textLength)
@@ -405,7 +405,7 @@ let finalText = tuple.1
             activeElements[type] = hashtagElements
         }
         
-        return textString
+//        return textString
     }
     
     
